@@ -28,12 +28,12 @@
             <% } else {%>
 
                 <form class="navbar-form navbar-right">
-                    <button type="submit" class="btn btn-success">Register</button>
+                    <a href="/register" class="btn btn-success">Register</a>
                 </form>
                 <div class="navbar-form navbar-right" style="color:white">
                     OR
                 </div>
-                <form method='post' action='home' class="navbar-form navbar-right">
+                <form method='post' action='login' class="navbar-form navbar-right">
                     <div class="form-group">
                         <input type="text" placeholder="id" id="login" name="login" class="form-control">
                     </div>

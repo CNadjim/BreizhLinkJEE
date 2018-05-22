@@ -1,6 +1,7 @@
 package service;
 
 
+import model.BreizhLink;
 import model.User;
 
 import java.sql.*;
@@ -58,6 +59,10 @@ public class DbConnect {
         }
         if(password.equals(user.getPassword())) return true;
         else return false;
+    }
+
+    public BreizhLink getBreizhLinkByHashCode(String id){
+        return new BreizhLink();
     }
 
 
