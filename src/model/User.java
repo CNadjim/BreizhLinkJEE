@@ -2,6 +2,7 @@ package model;
 
 public class User {
 
+    private Long id;
     private String login;
     private String password;
 
@@ -13,6 +14,14 @@ public class User {
         this.login = login;
         this.password = password;
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getLogin() {

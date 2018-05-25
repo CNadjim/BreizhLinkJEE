@@ -1,6 +1,9 @@
 <%@ page import="model.User" %>
+<%@ page import="model.BreizhLink" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <% User user = (User) request.getSession().getAttribute("user");%>
+<% List<BreizhLink> breizhLinks = (List<BreizhLink>) request.getAttribute("breizhLinks");%>
 <html>
 <head>
     <title>Profile</title>
@@ -25,9 +28,16 @@
                 Visualisation des statistiques
             </div>
 
+            <div class="col-xs-12">
+                <div><%= user.getLogin()%> link's : </div>
+                <% for(int i = 0; i < breizhLinks.size(); i++) { %>
+                <div>Link raccourci <%= i+1 %> : long : <%= breizhLinks.get(i).getUrl() %> & short : <%= breizhLinks.get(i).getShortUrl() %> & mot de passe : <%= breizhLinks.get(i).getPswd()%></div>
+                <% } %>
+            </div>
+
         </div>
     </div>
-</div>x
+</div>
 
 
 

@@ -33,6 +33,27 @@ public class DbConnect {
         return con;
     }
 
+    public Connection getConnection(){
+        this.con = null;
+        // chargement du pilote
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        //connection a la base de données
+        try {
+            String DBurl = "jdbc:mysql://localhost:3306/mydb";
+            this.con = DriverManager.getConnection(DBurl,"root","root");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+        }
+        return con;
+    }
+
 
     public boolean verifyUser(User user){
         String requete = "SELECT PASSWORD FROM USER WHERE LOGIN=?";
