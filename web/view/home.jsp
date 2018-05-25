@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="/WEB-INF/customTag.tld" prefix="ct" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
   <head>
     <title>Home</title>
@@ -10,8 +12,8 @@
     <div class="container">
       <div class="jumbotron">
         <div class="row">
-          <div class="col-xs-12">
 
+          <div class="col-xs-12">
               <form method='post' action='breizh' class="form-horizontal">
                 <div class="form-group">
                   <label for="link_url" class="col-sm-2 control-label">URL à raccourcir</label>
@@ -49,6 +51,11 @@
 
         </div>
       </div>
+      <c:out value='la somme de 1 + 1 = ${1 + 1}' />
+      <div class="col-xs-12">
+        <h2 align="center">Date du jour : <ct:today format="dd MM YYYY"/></h2>
+      </div>
+
     </div>
 
 
