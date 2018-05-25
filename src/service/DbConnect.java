@@ -36,7 +36,7 @@ public class DbConnect {
 
     public boolean verifyUser(User user){
         String requete = "SELECT PASSWORD FROM USER WHERE LOGIN=?";
-        ResultSet résultats = null;
+        ResultSet resultats = null;
         String password = new String();
         if (user.isNull()) {
             System.out.println("User empty");
@@ -45,14 +45,14 @@ public class DbConnect {
         try {
             PreparedStatement stmt = con.prepareStatement(requete);
             stmt.setString(1, user.getLogin());
-            résultats = stmt.executeQuery();
+            resultats = stmt.executeQuery();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         try {
-            while (résultats.next()) {
-                password = résultats.getString(1);
+            while (resultats.next()) {
+                password = resultats.getString(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,7 +61,7 @@ public class DbConnect {
         else return false;
     }
 
-    public BreizhLink getBreizhLinkByHashCode(String id){
+    public BreizhLink saveLink(BreizhLink breizhLink){
         return new BreizhLink();
     }
 

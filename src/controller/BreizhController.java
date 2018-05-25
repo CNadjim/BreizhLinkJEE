@@ -3,6 +3,7 @@ package controller;
 import model.BreizhLink;
 import model.User;
 import service.AuthService;
+import service.BreizhService;
 import service.DbConnect;
 
 import javax.servlet.RequestDispatcher;
@@ -26,19 +27,24 @@ public class BreizhController  extends HttpServlet {
 
     private DbConnect dbConnect;
     private AuthService authService;
+    private BreizhService breizhService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         dbConnect = new DbConnect();
         authService = new AuthService();
+        breizhService = new BreizhService();
         dbConnect.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
     }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = request.getRequestURI().trim();
-        String short_url = url.substring(8,url.length());
+        if(url.length() > 8){
+            String short_url = url.substring(8,url.length());
+        }
 
+        System.out.println(this.breizhService.createRandomShortUrl());
     }
 
 
@@ -51,8 +57,7 @@ public class BreizhController  extends HttpServlet {
         breizhLink.setPswd(link_password);
         breizhLink.setUrl(link_url);
 
-
-
+        dbConnect.saveLink(breizhLink);
 
         RequestDispatcher dispatcher;
         if (authService.isConnected(request)){

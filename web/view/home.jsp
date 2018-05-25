@@ -5,9 +5,7 @@
     <jsp:include page="../WEB-INF/ressource.jsp" />
   </head>
   <body>
-
   <jsp:include page="../WEB-INF/header.jsp" />
-
 
     <div class="container">
       <div class="jumbotron">
