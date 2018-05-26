@@ -43,8 +43,11 @@
                     <th>Url</th>
                     <th>Short Url</th>
                     <th>Password</th>
-                    <th>Deadline</th>
-                    <th>Visite</th>
+                    <th>Date start</th>
+                    <th>Date end</th>
+                    <th>Max visite</th>
+                    <th>Capcha</th>
+                    <th>Visite total</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -55,7 +58,10 @@
                     <td><%= breizhLinks.get(i).getUrl() %></td>
                     <td><%= breizhLinks.get(i).getShortUrl() %></td>
                     <td><%= breizhLinks.get(i).getPswd() %></td>
-                    <td><%= breizhLinks.get(i).getDeadline() %></td>
+                    <td><%= breizhLinks.get(i).getDateStart() %></td>
+                    <td><%= breizhLinks.get(i).getDateEnd() %></td>
+                    <td><%= breizhLinks.get(i).getMaxVisite() %></td>
+                    <td><%= breizhLinks.get(i).isSecured() %></td>
                     <td><%= breizhLinks.get(i).getVisite() %></td>
                     <td>
                         <a href="/breizh/<%= breizhLinks.get(i).getShortUrl() %>" class="btn btn-primary">Accéder</a>

@@ -3,29 +3,29 @@ package dao.impl;
 import dao.BreizhLinkDao;
 import exception.DAOException;
 import model.BreizhLink;
-import service.DbConnect;
+import service.ConnectionFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BreizhLinkDaoImpl implements BreizhLinkDao {
-    private DbConnect dbConnect;
+    private ConnectionFactory connectionFactory;
 
-    public BreizhLinkDaoImpl(DbConnect dbConnect){
-        this.dbConnect = dbConnect;
+    public BreizhLinkDaoImpl(ConnectionFactory connectionFactory){
+        this.connectionFactory = connectionFactory;
     }
-    private static final String SQL_INSERT = "INSERT INTO BREIZH_LINK (USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DEADLINE) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_INSERT = "INSERT INTO BREIZH_LINK (USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DATE_START, DATE_END, MAX_VISITE, SECURED) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    public void save( BreizhLink breizhLink ) throws DAOException {
+    public BreizhLink save( BreizhLink breizhLink ) throws DAOException {
         Connection connexion = null;
         PreparedStatement preparedStatement = null;
         ResultSet valeursAutoGenerees = null;
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = dbConnect.getConnection();
-            preparedStatement = initialisationRequetePreparee( connexion, SQL_INSERT, true,breizhLink.getUserLogin(), breizhLink.getUrl(), breizhLink.getShortUrl(),breizhLink.getPswd(),breizhLink.getVisite(),breizhLink.getDeadline() );
+            connexion = connectionFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_INSERT, true,breizhLink.getUserLogin(), breizhLink.getUrl(), breizhLink.getShortUrl(),breizhLink.getPswd(),breizhLink.getVisite(),breizhLink.getDateStart(), breizhLink.getDateEnd(), breizhLink.getMaxVisite(), breizhLink.isSecured() );
             int statut = preparedStatement.executeUpdate();
             /* Analyse du statut retourné par la requête d'insertion */
             if ( statut == 0 ) {
@@ -44,10 +44,11 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
         } finally {
             fermeturesSilencieuses( valeursAutoGenerees, preparedStatement, connexion );
         }
+        return breizhLink;
     }
 
 
-    private static final String SQL_UPDATE = "UPDATE BREIZH_LINK SET USER_LOGIN = ?, URL = ?, SHORT_URL = ?, PSWD = ?, VISITE = ?, DEADLINE = ? WHERE ID = ?";
+    private static final String SQL_UPDATE = "UPDATE BREIZH_LINK SET USER_LOGIN = ?, URL = ?, SHORT_URL = ?, PSWD = ?, VISITE = ?, DATE_START = ?, DATE_END = ?, MAX_VISITE = ?, SECURED = ? WHERE ID = ?";
 
     public void update( BreizhLink breizhLink ) throws DAOException {
         Connection connexion = null;
@@ -56,12 +57,12 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = dbConnect.getConnection();
-            preparedStatement = initialisationRequetePreparee( connexion, SQL_UPDATE, true,breizhLink.getUserLogin(), breizhLink.getUrl(), breizhLink.getShortUrl(),breizhLink.getPswd(),breizhLink.getVisite(),breizhLink.getDeadline(), breizhLink.getId() );
+            connexion = connectionFactory.getConnection();
+            preparedStatement = initialisationRequetePreparee( connexion, SQL_UPDATE, true,breizhLink.getUserLogin(), breizhLink.getUrl(), breizhLink.getShortUrl(),breizhLink.getPswd(),breizhLink.getVisite(),breizhLink.getDateStart(), breizhLink.getDateEnd(), breizhLink.getMaxVisite(), breizhLink.isSecured(), breizhLink.getId() );
             int statut = preparedStatement.executeUpdate();
             /* Analyse du statut retourné par la requête d'insertion */
             if ( statut == 0 ) {
-                throw new DAOException( "Échec de l'update du breizhlink, aucune ligne ajoutée dans la table." );
+                throw new DAOException( "Échec de l'update du breizhlink, aucune ligne modifier dans la table." );
             }
         } catch ( SQLException e ) {
             throw new DAOException( e );
@@ -70,7 +71,7 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
         }
     }
 
-    private static final String SQL_SELECT_PAR_SHORT_URL = "SELECT ID, USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DEADLINE FROM BREIZH_LINK WHERE SHORT_URL = ?";
+    private static final String SQL_SELECT_PAR_SHORT_URL = "SELECT ID, USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DATE_START, DATE_END, MAX_VISITE, SECURED FROM BREIZH_LINK WHERE SHORT_URL = ?";
 
 
     public BreizhLink findByShortUrl(String shortUrl ){
@@ -81,7 +82,7 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = dbConnect.getConnection();
+            connexion = connectionFactory.getConnection();
             preparedStatement = initialisationRequetePreparee( connexion, SQL_SELECT_PAR_SHORT_URL, false, shortUrl );
             resultSet = preparedStatement.executeQuery();
             /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
@@ -98,7 +99,7 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
     }
 
 
-    private static final String SQL_SELECT_PAR_USER_LOGIN = "SELECT ID, USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DEADLINE FROM BREIZH_LINK WHERE USER_LOGIN = ?";
+    private static final String SQL_SELECT_PAR_USER_LOGIN = "SELECT ID, USER_LOGIN, URL, SHORT_URL, PSWD, VISITE, DATE_START, DATE_END, MAX_VISITE, SECURED FROM BREIZH_LINK WHERE USER_LOGIN = ?";
 
     public List<BreizhLink> findByUserLogin(String userLogin ){
         Connection connexion = null;
@@ -109,7 +110,7 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
 
         try {
             /* Récupération d'une connexion depuis la Factory */
-            connexion = dbConnect.getConnection();
+            connexion = connectionFactory.getConnection();
             preparedStatement = initialisationRequetePreparee( connexion, SQL_SELECT_PAR_USER_LOGIN, false, userLogin );
             resultSet = preparedStatement.executeQuery();
             /* Parcours de la ligne de données de l'éventuel ResulSet retourné */
@@ -143,7 +144,10 @@ public class BreizhLinkDaoImpl implements BreizhLinkDao {
         breizhLink.setShortUrl( resultSet.getString( "SHORT_URL" ) );
         breizhLink.setPswd( resultSet.getString( "PSWD" ) );
         breizhLink.setVisite(resultSet.getLong( "VISITE" ));
-        breizhLink.setDeadline(resultSet.getDate( "DEADLINE" ) );
+        breizhLink.setDateStart(resultSet.getDate( "DATE_START" ) );
+        breizhLink.setDateEnd(resultSet.getDate( "DATE_END" ) );
+        breizhLink.setMaxVisite(resultSet.getLong( "MAX_VISITE" ));
+        breizhLink.setSecured(resultSet.getBoolean( "SECURED" ));
         return breizhLink;
     }
 

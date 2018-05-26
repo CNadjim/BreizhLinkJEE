@@ -13,13 +13,12 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="/">Acceuil</a>
-            <a class="navbar-brand" href="/presentation">Présentation</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
 
             <% if (!(user == null )) { %>
             <div class="navbar-form navbar-right">
-                <a class="btn btn-primary" href="#">Raccourcir</a>
+                <a class="btn btn-default" href="/profile/shorten">Raccourcir</a>
                 <a class="btn btn-primary" href="/profile">Mon compte</a>
                 <a class="btn btn-danger" href="/logout">Deconnexion</a>
             </div>
@@ -27,12 +26,9 @@
 
             <% } else {%>
 
-                <form class="navbar-form navbar-right">
+                <form class="navbar-form navbar-right" style="border-left: 2px solid white;">
                     <a href="/register" class="btn btn-success">Register</a>
                 </form>
-                <div class="navbar-form navbar-right" style="color:white">
-                    OR
-                </div>
                 <form method='post' action='login' class="navbar-form navbar-right">
                     <div class="form-group">
                         <input type="text" placeholder="id" id="login" name="login" class="form-control">

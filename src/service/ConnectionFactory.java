@@ -1,14 +1,7 @@
 package service;
-
-
-import model.BreizhLink;
-import model.User;
-
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DbConnect {
+public class ConnectionFactory {
 
     private Connection con;
 
@@ -55,36 +48,6 @@ public class DbConnect {
     }
 
 
-    public boolean verifyUser(User user){
-        String requete = "SELECT PASSWORD FROM USER WHERE LOGIN=?";
-        ResultSet resultats = null;
-        String password = new String();
-        if (user.isNull()) {
-            System.out.println("User empty");
-            return false;
-        }
-        try {
-            PreparedStatement stmt = con.prepareStatement(requete);
-            stmt.setString(1, user.getLogin());
-            resultats = stmt.executeQuery();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            while (resultats.next()) {
-                password = resultats.getString(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        if(password.equals(user.getPassword())) return true;
-        else return false;
-    }
-
-    public BreizhLink saveLink(BreizhLink breizhLink){
-        return new BreizhLink();
-    }
 
 
 

@@ -3,8 +3,9 @@ package dao;
 import model.User;
 
 public interface UserDao {
-    boolean save ( User user );
+    User save ( User user );
     User findOne( Long id );
+    User findByUserName(String userName);
 }
 
 

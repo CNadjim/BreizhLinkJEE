@@ -3,16 +3,15 @@ package service;
 import dao.impl.BreizhLinkDaoImpl;
 import model.BreizhLink;
 
-import java.util.Objects;
 import java.util.Random;
 
 public final class BreizhService {
-    private DbConnect dbConnect;
+    private ConnectionFactory connectionFactory;
     private BreizhLinkDaoImpl breizhLinkDao;
 
-    public BreizhService(DbConnect dbConnect){
-        this.dbConnect = dbConnect;
-        this.breizhLinkDao = new BreizhLinkDaoImpl(dbConnect);
+    public BreizhService(ConnectionFactory connectionFactory){
+        this.connectionFactory = connectionFactory;
+        this.breizhLinkDao = new BreizhLinkDaoImpl(connectionFactory);
     }
 
     public String createRandomShortUrl(){
@@ -39,6 +38,7 @@ public final class BreizhService {
         int randint = Math.abs(r.nextInt()) % 11;
         return randint;
     }
+
 
 
 }

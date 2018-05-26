@@ -1,8 +1,10 @@
 <%@ page import="model.User" %>
+<%@ page import="model.BreizhLink" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/customTag.tld" prefix="ct" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% User user = (User) request.getSession().getAttribute("user");%>
+<% BreizhLink breizhLink = (BreizhLink) request.getAttribute("breizhLink");%>
 <html>
   <head>
     <title>Home</title>
@@ -16,6 +18,7 @@
         <div class="row">
 
           <div class="col-xs-12">
+            <h2>Bienvenue sur BREIZHLINK</h2>
               <form method='post' action='breizh' class="form-horizontal">
                 <div class="form-group">
                   <label for="link_url" class="col-sm-2 control-label">URL à raccourcir</label>
@@ -47,6 +50,19 @@
               </form>
 
           </div>
+          <% if(breizhLink != null) { %>
+          <div class="col-xs-12">
+            <div class="form-horizontal" >
+              <div class="form-group">
+                <label for="link_url" class="col-sm-2 control-label">Votre url raccourcie</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" value="http://localhost:8080/breizh/<%= breizhLink.getShortUrl()%>">
+                </div>
+              </div>
+            </div>
+          </div>
+          <% } %>
+
           <% if(user == null) { %>
           <div class="col-xs-12">
             <h5><a href="register">Créer un compte pour voir nos autres options possibles</a></h5>

@@ -1,7 +1,9 @@
 package controller;
 
+import dao.impl.UserDaoImpl;
 import model.User;
-import service.DbConnect;
+import service.AuthService;
+import service.ConnectionFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -9,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
@@ -20,13 +21,16 @@ public class LoginController  extends HttpServlet {
     private String login;
     private String password;
 
-    private DbConnect dbConnect;
+    private ConnectionFactory connectionFactory;
+    private UserDaoImpl userDao;
+    private AuthService authService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        dbConnect = new DbConnect();
-        dbConnect.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
-
+        connectionFactory = new ConnectionFactory();
+        connectionFactory.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
+        userDao = new UserDaoImpl(connectionFactory);
+        authService = new AuthService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,18 +42,20 @@ public class LoginController  extends HttpServlet {
         login = request.getParameter("login");
         password = request.getParameter("password");
 
-        if(login.trim().equals("") || password.trim().equals("") ){
+        User user = userDao.findByUserName(login);
+
+        if (login.trim().isEmpty() || password.trim().isEmpty() || user == null ){
             response.sendRedirect("/");
-        }else {
-            User user = new User(login,password);
-            if(dbConnect.verifyUser(user)){
-                HttpSession session = request.getSession();
-                session.setAttribute( "user",user );
+        }else{
+
+            if(user.getPassword().equals(password)){
+                authService.login(request,user);
                 response.sendRedirect("/profile");
             }else{
                 response.sendRedirect("/");
             }
         }
+
 
     }
 }

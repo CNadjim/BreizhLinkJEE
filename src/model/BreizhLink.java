@@ -1,5 +1,7 @@
 package model;
 import java.sql.Date;
+import java.util.Calendar;
+
 public class BreizhLink {
 
     private Long id;
@@ -9,22 +11,10 @@ public class BreizhLink {
     private String shortUrl;
     private String pswd;
     private Long visite;
-    private Date deadline;
-
-    public BreizhLink(){
-        super();
-    }
-
-    public BreizhLink(String url,String shortUrl){
-        this.url = url;
-        this.shortUrl = shortUrl;
-    }
-
-    public BreizhLink(String userLogin,String url,String shortUrl){
-        this.userLogin = userLogin;
-        this.url = url;
-        this.shortUrl = shortUrl;
-    }
+    private Date dateStart;
+    private Date dateEnd;
+    private Long maxVisite;
+    private boolean secured;
 
     public String getUserLogin() {
         return userLogin;
@@ -74,11 +64,40 @@ public class BreizhLink {
         this.visite = visite;
     }
 
-    public Date getDeadline() {
-        return deadline;
+    public Date getDateStart() {
+        return dateStart;
     }
 
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
+    public void setDateStart(Date dateStart) {
+        this.dateStart = dateStart;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public Long getMaxVisite() {
+        return maxVisite;
+    }
+
+    public void setMaxVisite(Long maxVisite) {
+        this.maxVisite = maxVisite;
+    }
+
+    public boolean isSecured() {
+        return secured;
+    }
+
+    public void setSecured(boolean secured) {
+        this.secured = secured;
+    }
+
+    private boolean isObsolete(){
+        java.sql.Date aujourdhui = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+        return (aujourdhui.after(dateEnd));
     }
 }

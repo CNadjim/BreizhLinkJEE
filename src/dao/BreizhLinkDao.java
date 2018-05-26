@@ -6,8 +6,8 @@ import model.User;
 import java.util.List;
 
 public interface BreizhLinkDao {
-    void save ( BreizhLink breizhLink );
+    BreizhLink save ( BreizhLink breizhLink );
     void update(BreizhLink breizhLink);
-    BreizhLink findByShortUrl(String shortUrl );
+    BreizhLink findByShortUrl(String shortUrl);
     List<BreizhLink> findByUserLogin(String userLogin);
 }

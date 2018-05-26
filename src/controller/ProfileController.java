@@ -2,9 +2,8 @@ package controller;
 
 import dao.impl.BreizhLinkDaoImpl;
 import model.BreizhLink;
-import model.User;
 import service.AuthService;
-import service.DbConnect;
+import service.ConnectionFactory;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,15 +20,15 @@ public class ProfileController  extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
 
-    private DbConnect dbConnect;
+    private ConnectionFactory connectionFactory;
     private BreizhLinkDaoImpl breizhLinkDao;
     private AuthService authService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        dbConnect = new DbConnect();
-        dbConnect.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
-        breizhLinkDao = new BreizhLinkDaoImpl(dbConnect);
+        connectionFactory = new ConnectionFactory();
+        connectionFactory.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
+        breizhLinkDao = new BreizhLinkDaoImpl(connectionFactory);
         authService = new AuthService();
     }
 
