@@ -1,6 +1,8 @@
+<%@ page import="model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="/WEB-INF/customTag.tld" prefix="ct" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<% User user = (User) request.getSession().getAttribute("user");%>
 <html>
   <head>
     <title>Home</title>
@@ -45,16 +47,14 @@
               </form>
 
           </div>
+          <% if(user == null) { %>
           <div class="col-xs-12">
             <h5><a href="register">Créer un compte pour voir nos autres options possibles</a></h5>
           </div>
-
+          <% } %>
         </div>
       </div>
-      <c:out value='la somme de 1 + 1 = ${1 + 1}' />
-      <div class="col-xs-12">
-        <h2 align="center">Date du jour : <ct:today format="dd MM YYYY"/></h2>
-      </div>
+
 
     </div>
 

@@ -3,6 +3,7 @@ package controller;
 import dao.impl.BreizhLinkDaoImpl;
 import model.BreizhLink;
 import model.User;
+import service.AuthService;
 import service.DbConnect;
 
 import javax.servlet.ServletConfig;
@@ -23,17 +24,18 @@ public class ProfileController  extends HttpServlet {
 
     private DbConnect dbConnect;
     private BreizhLinkDaoImpl breizhLinkDao;
+    private AuthService authService;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         dbConnect = new DbConnect();
         dbConnect.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
         breizhLinkDao = new BreizhLinkDaoImpl(dbConnect);
+        authService = new AuthService();
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<BreizhLink> breizhLinks = breizhLinkDao.findByUserLogin("admin");
-        System.out.println(breizhLinks.toString());
+        List<BreizhLink> breizhLinks = breizhLinkDao.findByUserLogin(authService.getCurrentUser(request).getLogin());
         request.setAttribute( "breizhLinks", breizhLinks );
         this.getServletContext().getRequestDispatcher( "/view/profile.jsp" ).forward( request, response );
     }

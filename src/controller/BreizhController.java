@@ -1,5 +1,6 @@
 package controller;
 
+import dao.impl.BreizhLinkDaoImpl;
 import model.BreizhLink;
 import model.User;
 import service.AuthService;
@@ -23,50 +24,57 @@ public class BreizhController  extends HttpServlet {
     private String link_url;
     private String link_password;
 
-    private String guestUrl;
 
     private DbConnect dbConnect;
     private AuthService authService;
     private BreizhService breizhService;
+    private BreizhLinkDaoImpl breizhLinkDao;
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         dbConnect = new DbConnect();
-        authService = new AuthService();
-        breizhService = new BreizhService();
         dbConnect.connect(this.getServletContext().getInitParameter("databaseUser"),this.getServletContext().getInitParameter("databasePassword"));
+        authService = new AuthService();
+        breizhService = new BreizhService(dbConnect);
+        breizhLinkDao = new BreizhLinkDaoImpl(dbConnect);
     }
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String url = request.getRequestURI().trim();
+        BreizhLink breizhLink = null;
         if(url.length() > 8){
             String short_url = url.substring(8,url.length());
+            breizhLink = breizhLinkDao.findByShortUrl(short_url);
         }
-
-        System.out.println(this.breizhService.createRandomShortUrl());
+        if (breizhLink != null ){
+            breizhLink.setVisite(breizhLink.getVisite()+1);
+            breizhLinkDao.update(breizhLink);
+            response.sendRedirect(breizhLink.getUrl());
+        }
+        else response.sendRedirect("/home");
     }
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         link_url = request.getParameter("link_url");
         link_password = request.getParameter("link_password");
 
-        BreizhLink breizhLink = new BreizhLink();
-        breizhLink.setPswd(link_password);
-        breizhLink.setUrl(link_url);
-
-        dbConnect.saveLink(breizhLink);
-
-        RequestDispatcher dispatcher;
-        if (authService.isConnected(request)){
-            dispatcher = getServletContext().getRequestDispatcher( "/view/profile.jsp" );
-        }else{
-
-            dispatcher = getServletContext().getRequestDispatcher( "/view/home.jsp" );
+        if(!link_url.isEmpty()){
+            BreizhLink breizhLink = new BreizhLink();
+            breizhLink.setUrl(link_url);
+            if(!link_password.isEmpty()) breizhLink.setPswd(link_password);
+            if(authService.isConnected(request)) breizhLink.setUserLogin(authService.getCurrentUser(request).getLogin());
+            breizhLink.setShortUrl(breizhService.createRandomShortUrl());
+            breizhLink.setId(null);
+            breizhLinkDao.save(breizhLink);
         }
-        dispatcher.forward( request, response );
+
+        if (authService.isConnected(request)){
+            response.sendRedirect("/profile");
+        }else{
+            response.sendRedirect("/home");
+        }
 
     }
 }

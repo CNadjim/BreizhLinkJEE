@@ -1,5 +1,5 @@
 package model;
-
+import java.sql.Date;
 public class BreizhLink {
 
     private Long id;
@@ -8,6 +8,8 @@ public class BreizhLink {
     private String url;
     private String shortUrl;
     private String pswd;
+    private Long visite;
+    private Date deadline;
 
     public BreizhLink(){
         super();
@@ -62,5 +64,21 @@ public class BreizhLink {
 
     public void setShortUrl(String shortUrl) {
         this.shortUrl = shortUrl;
+    }
+
+    public Long getVisite() {
+        return visite;
+    }
+
+    public void setVisite(Long visite) {
+        this.visite = visite;
+    }
+
+    public Date getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Date deadline) {
+        this.deadline = deadline;
     }
 }
