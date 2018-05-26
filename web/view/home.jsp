@@ -1,7 +1,6 @@
 <%@ page import="model.User" %>
 <%@ page import="model.BreizhLink" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="/WEB-INF/customTag.tld" prefix="ct" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <% User user = (User) request.getSession().getAttribute("user");%>
 <% BreizhLink breizhLink = (BreizhLink) request.getAttribute("breizhLink");%>
